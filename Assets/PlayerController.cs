@@ -75,14 +75,16 @@ public class PlayerController : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
 
-        //convert the input into an angle in radians, and convert that into degrees
-        float rads = Mathf.Atan2(y, x);
-        float degrees = rads * Mathf.Rad2Deg;
+        // Debug.Log(x);
+        // Debug.Log(y);
+        // //convert the input into an angle in radians, and convert that into degrees
+        // float rads = Mathf.Atan2(y, x);
+        // float degrees = rads * Mathf.Rad2Deg;
 
-        //use trig to position sword
-        weapon.transform.localPosition = new Vector3(Mathf.Cos(rads) * 1, 0, Mathf.Sin(rads) * 1); 
+        // //use trig to position sword
+        // weapon.transform.localPosition = new Vector3(Mathf.Cos(rads) * 1, 0, Mathf.Sin(rads) * 1); 
 
-        weapon.transform.localEulerAngles = new Vector3(0, -degrees + 90, 0);
+        // weapon.transform.localEulerAngles = new Vector3(0, -degrees + 90, 0);
     }
 
     void FixedUpdate()
@@ -108,7 +110,7 @@ public class PlayerController : MonoBehaviour
     private void Dodge(InputAction.CallbackContext context)
     {
         isDodging = true;
-        rb.velocity += new Vector2(moveDirection.x * moveSpeed * 100 * Time.deltaTime, moveDirection.y * moveSpeed);
+        rb.velocity += new Vector2(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed);
     }
 
     void OnDisable()
