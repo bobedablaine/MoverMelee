@@ -10,10 +10,11 @@ public class PlayerController : MonoBehaviour
     private InputAction move;
     private InputAction fire;
     private InputAction dodge;
+    private InputAction pause;
     private Vector2 moveDirection;
     private Rigidbody2D rb;
-    public int playerHealth = 100;
-    int currentHealth = 100;
+    public float playerHealth = 100;
+    float currentHealth = 100;
     [SerializeField] float moveSpeed = 10f;
     [SerializeField] float dodgeDuration = 2f;
     [SerializeField] private float dodgeTimer = 0f;
@@ -25,12 +26,18 @@ public class PlayerController : MonoBehaviour
     public bool isSwinging = false;
     BoxCollider2D bc;
     [SerializeField] float iframeTimer = 0;
+    [SerializeField] GameObject deathScreen;
+    [SerializeField] GameObject pauseScreen;
+    [SerializeField] RectTransform healthbarForeGround;
+    float healthbarMaxWidth = 247.58f;
+    float maxHealth = 100f;
     private void Awake()
     {
         playerControls = new PlayerInputActions();
         rb = GetComponent<Rigidbody2D>();
         main = Camera.main;
         bc = GetComponent<BoxCollider2D>();
+        Time.timeScale = 1;
     }
 
     private void OnEnable()
@@ -45,6 +52,10 @@ public class PlayerController : MonoBehaviour
         dodge = playerControls.Player.Dodge;
         dodge.Enable();
         dodge.performed += Dodge;
+
+        pause = playerControls.Player.Pause;
+        pause.Enable();
+        pause.performed += Pause;
     }
 
     // Update is called once per frame
@@ -77,6 +88,7 @@ public class PlayerController : MonoBehaviour
         {
             bc.enabled = false;
             currentHealth = playerHealth;
+            healthbarForeGround.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, healthbarMaxWidth * (playerHealth/maxHealth));
         }
 
         if (!bc.enabled)
@@ -106,7 +118,7 @@ public class PlayerController : MonoBehaviour
     void PlayerDeath()
     {
         Time.timeScale = 0;
-
+        deathScreen.SetActive(true);
     }
 
     private void Fire(InputAction.CallbackContext context)
@@ -122,6 +134,12 @@ public class PlayerController : MonoBehaviour
     {
         isDodging = true;
         rb.velocity += new Vector2(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed);
+    }
+
+    private void Pause(InputAction.CallbackContext context)
+    {
+        Time.timeScale = 0;
+        pauseScreen.SetActive(true);
     }
 
     void OnDisable()

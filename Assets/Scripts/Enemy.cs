@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
     PlayerController player;
     Rigidbody2D rb;
     GameObject indicator;
+    EnemyManager enemyMan;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +27,7 @@ public class Enemy : MonoBehaviour
         player = FindObjectOfType<PlayerController>();
         rb = GetComponent<Rigidbody2D>();
         indicator = transform.GetChild(0).GetChild(0).gameObject;
+        enemyMan = FindObjectOfType<EnemyManager>();
         
     }
 
@@ -41,7 +43,7 @@ public class Enemy : MonoBehaviour
         distanceToPlayer = transform.position - player.transform.position;
         
 
-        if (distanceToPlayer.magnitude < enemyRange && timer > 5)
+        if (distanceToPlayer.magnitude < enemyRange && timer > 3)
         {   
             isAttacking = true;
             
@@ -51,7 +53,7 @@ public class Enemy : MonoBehaviour
         if (isLunging)
         {
             lungeTimer += Time.deltaTime;
-            if (lungeTimer > 1.5)
+            if (lungeTimer > 2)
             {
                 rb.velocity = Vector2.zero;
                 lungeTimer = 0;
@@ -59,17 +61,20 @@ public class Enemy : MonoBehaviour
         }
 
         if (isAttacking)
+        {
+            windupTimer += Time.deltaTime;
+            indicator.SetActive(true);
+            if (windupTimer > 1.5)
             {
-                windupTimer += Time.deltaTime;
-                indicator.SetActive(true);
-                if (windupTimer > 1.5)
-                {
-                    Attack();
-                    isAttacking = false;
-                    windupTimer = 0;
-                    indicator.SetActive(false);
-                }
+                Attack();
+                isAttacking = false;
+                windupTimer = 0;
+                indicator.SetActive(false);
             }
+        }
+        
+        if (enemyHealth <= 0)
+            EnemyDeath();
         
     }
 
@@ -94,5 +99,11 @@ public class Enemy : MonoBehaviour
         {
             enemyHealth -= player.weaponDamage;
         }
+    }
+
+    void EnemyDeath()
+    {
+        enemyMan.numOfEnemies--;
+        Destroy(gameObject);
     }
 }

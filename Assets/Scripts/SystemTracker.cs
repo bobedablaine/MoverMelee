@@ -4,24 +4,43 @@ using UnityEngine;
 
 public class SystemTracker : MonoBehaviour
 {
-    public int LevelCount = 1;
     [SerializeField] GameObject Level1Door;
+    [SerializeField] GameObject Level2Door;
+    [SerializeField] GameObject Level3Door;
+    [SerializeField] GameObject resetButton;
     
-    BoxCollider2D level1Col;
     // Start is called before the first frame update
     void Start()
     {
-        level1Col = Level1Door.GetComponent<BoxCollider2D>();   
+        if (!PlayerPrefs.HasKey("winCount"))
+        {
+            PlayerPrefs.SetInt("winCount", 1);
+        }
+        if (PlayerPrefs.GetInt("winCount") == 1)
+        {
+            Level1Door.SetActive(true);
+            Level2Door.SetActive(false);
+            Level3Door.SetActive(false);
+        }
+        else if (PlayerPrefs.GetInt("winCount") == 2)
+        {
+            Level1Door.SetActive(true);
+            Level2Door.SetActive(true);
+            Level3Door.SetActive(false);
+        }
+        else if (PlayerPrefs.GetInt("winCount") == 3)
+        {
+            Level1Door.SetActive(true);
+            Level2Door.SetActive(true);
+            Level3Door.SetActive(true);
+        }
+        else if (PlayerPrefs.GetInt("winCount") == 4)
+        {
+            Level1Door.SetActive(true);
+            Level2Door.SetActive(true);
+            Level3Door.SetActive(true);
+            resetButton.SetActive(true);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-           
-    }
-
-    // void OnCollisionEnter2D(Collision2D col)
-    // {
-    //     if (col.gameObject.CompareTag("Player"));
-    // }
 }

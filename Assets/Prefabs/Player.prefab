@@ -280,12 +280,15 @@ MonoBehaviour:
   moveSpeed: 5
   dodgeDuration: 0.25
   dodgeTimer: 0
-  weaponDuration: 0.2
+  weaponDuration: 0.4
   weaponTimer: 0
   weaponDamage: 10
   weapon: {fileID: 718769455808285771}
   isSwinging: 0
   iframeTimer: 0
+  deathScreen: {fileID: 0}
+  pauseScreen: {fileID: 0}
+  healthbarForeGround: {fileID: 0}
 --- !u!61 &8175177869231800101
 BoxCollider2D:
   m_ObjectHideFlags: 0
