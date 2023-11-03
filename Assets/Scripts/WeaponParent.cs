@@ -6,15 +6,18 @@ public class WeaponParent : MonoBehaviour
 {
     public Vector2 pointerPosition;
     Camera main;
+    PlayerController player;
 
     void Awake()
     {
         main = Camera.main;
+        player = FindObjectOfType<PlayerController>();
     }
 
     void Update()
     {
         pointerPosition = main.ScreenToWorldPoint(Input.mousePosition);
-        transform.right = (pointerPosition - (Vector2)transform.position).normalized;
+        if (!player.isSwinging)
+            transform.right = (pointerPosition - (Vector2)transform.position).normalized;
     }
 }

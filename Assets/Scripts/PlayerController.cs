@@ -12,22 +12,25 @@ public class PlayerController : MonoBehaviour
     private InputAction dodge;
     private Vector2 moveDirection;
     private Rigidbody2D rb;
-    private Rigidbody2D wrb;
+    public int playerHealth = 100;
+    int currentHealth = 100;
     [SerializeField] float moveSpeed = 10f;
     [SerializeField] float dodgeDuration = 2f;
     [SerializeField] private float dodgeTimer = 0f;
     [SerializeField] float weaponDuration = 2f;
     [SerializeField] private float weaponTimer = 0f;
+    public int weaponDamage = 10;
     [SerializeField] GameObject weapon;
     bool isDodging = false;
-    bool isSwinging = false;
-    private Vector2 mousePos;
+    public bool isSwinging = false;
+    BoxCollider2D bc;
+    [SerializeField] float iframeTimer = 0;
     private void Awake()
     {
         playerControls = new PlayerInputActions();
         rb = GetComponent<Rigidbody2D>();
         main = Camera.main;
-        //wrb = GetComponentInChildren<Rigidbody2D>();
+        bc = GetComponent<BoxCollider2D>();
     }
 
     private void OnEnable()
@@ -69,33 +72,41 @@ public class PlayerController : MonoBehaviour
                 weapon.SetActive(false);
             }
         }
+
+        if (currentHealth != playerHealth)
+        {
+            bc.enabled = false;
+            currentHealth = playerHealth;
+        }
+
+        if (!bc.enabled)
+        {
+            iframeTimer += Time.deltaTime;
+            if (iframeTimer > 1)
+            {
+                bc.enabled = true;
+                iframeTimer = 0;
+            }
+        }
+
+        if (playerHealth <= 0)
+        {
+            PlayerDeath();
+        }
+
         
-        mousePos = main.ScreenToWorldPoint(Input.mousePosition);
-
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
-
-        // Debug.Log(x);
-        // Debug.Log(y);
-        // //convert the input into an angle in radians, and convert that into degrees
-        // float rads = Mathf.Atan2(y, x);
-        // float degrees = rads * Mathf.Rad2Deg;
-
-        // //use trig to position sword
-        // weapon.transform.localPosition = new Vector3(Mathf.Cos(rads) * 1, 0, Mathf.Sin(rads) * 1); 
-
-        // weapon.transform.localEulerAngles = new Vector3(0, -degrees + 90, 0);
     }
 
     void FixedUpdate()
     {
         if (!isDodging)
             rb.velocity = new Vector2(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed);
-        
-        //Vector2 lookDir = mousePos - rb.position;
-        //float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        //wrb.rotation = angle;
-        //weapon.transform.localPosition = new Vector3(lookDir.x, lookDir.y, 0);
+    }
+
+    void PlayerDeath()
+    {
+        Time.timeScale = 0;
+
     }
 
     private void Fire(InputAction.CallbackContext context)
@@ -121,4 +132,6 @@ public class PlayerController : MonoBehaviour
 
         dodge.Disable();
     }
+
+    
 }
