@@ -9,6 +9,11 @@ public class SceneManage : MonoBehaviour
     [SerializeField] GameObject mainMenu;
     [SerializeField] GameObject settingsScreen;
     
+    private void Start()
+    {
+        settingsScreen.SetActive(false);
+    }
+    
     public void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

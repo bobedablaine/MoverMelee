@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Enemy : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class Enemy : MonoBehaviour
     Rigidbody2D rb;
     GameObject indicator;
     EnemyManager enemyMan;
+    [SerializeField] GameObject enemyPrefab;
+    [SerializeField] bool IsBoss = false;
+    [SerializeField] float spawnTimer = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -75,6 +79,16 @@ public class Enemy : MonoBehaviour
         
         if (enemyHealth <= 0)
             EnemyDeath();
+
+        if (IsBoss)
+        {
+            spawnTimer += Time.deltaTime;
+            if (spawnTimer > 5)
+            {
+                SpawnEnemy(1);
+                spawnTimer = 0;
+            }
+        }
         
     }
 
@@ -101,9 +115,30 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void SpawnEnemy(int health)
+    {
+        GameObject en = Instantiate(enemyPrefab, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
+        Enemy enSc = en.GetComponent<Enemy>();
+        enSc.enemyHealth = health;
+    }
+
     void EnemyDeath()
     {
-        enemyMan.numOfEnemies--;
-        Destroy(gameObject);
+        if (SceneManager.GetActiveScene().name == "LevelThree" )
+        {
+            if (this.IsBoss)
+            {
+                enemyMan.numOfEnemies--;
+                Destroy(gameObject);
+            }
+            else
+                Destroy(gameObject);     
+        }
+        else
+        {
+            enemyMan.numOfEnemies--;
+            Destroy(gameObject);
+        }
+        
     }
 }
