@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = 1;
     }
 
+
     private void OnEnable()
     {
         move = playerControls.Player.Move;
