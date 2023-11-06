@@ -207,7 +207,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.9622642, g: 0.023602786, b: 0.023602786, a: 1}
+  m_Color: {r: 1, g: 0.5123672, b: 0.47798735, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -234,6 +234,9 @@ MonoBehaviour:
   enemyDamage: 20
   enemyHealth: 100
   isAttacking: 0
+  enemyPrefab: {fileID: 0}
+  IsBoss: 0
+  spawnTimer: 0
 --- !u!50 &4144481248193922123
 Rigidbody2D:
   serializedVersion: 4
