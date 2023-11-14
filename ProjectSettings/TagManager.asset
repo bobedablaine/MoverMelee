@@ -8,6 +8,9 @@ TagManager:
   - Weapon
   - Enemy
   - DeathScreen
+  - Axe
+  - Spear
+  - Sword
   layers:
   - Default
   - TransparentFX

@@ -9,7 +9,11 @@ public class Enemy : MonoBehaviour
     [SerializeField] float moveSpeed = 5;
     [SerializeField] float lungeSpeed = 5;
     [SerializeField] int enemyDamage = 20;
-    public int enemyHealth = 50;
+    public float enemyHealth = 50;
+    float maxHealth = 50;
+    float healthbarMaxWidth = 0.5f;
+    float currentHealth;
+    [SerializeField] RectTransform healthbarForeGround;
     Vector3 distanceToPlayer;
     public bool isAttacking = false;
     bool isLunging = false;
@@ -32,7 +36,17 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         indicator = transform.GetChild(0).GetChild(0).gameObject;
         enemyMan = FindObjectOfType<EnemyManager>();
-        
+        if (!IsBoss)
+        {
+            healthbarForeGround = transform.GetChild(1).GetChild(0).GetChild(1).GetComponent<RectTransform>();
+            healthbarMaxWidth = 0.5f;
+        }
+        else
+        {
+            healthbarMaxWidth = 519.69f;
+            maxHealth = enemyHealth;
+        }
+            
     }
 
     // Update is called once per frame
@@ -75,6 +89,12 @@ public class Enemy : MonoBehaviour
                 windupTimer = 0;
                 indicator.SetActive(false);
             }
+        }
+
+        if (currentHealth != enemyHealth)
+        {
+            currentHealth = enemyHealth;
+            healthbarForeGround.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, healthbarMaxWidth * (enemyHealth/maxHealth));
         }
         
         if (enemyHealth <= 0)

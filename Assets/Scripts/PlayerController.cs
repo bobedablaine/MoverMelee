@@ -33,11 +33,17 @@ public class PlayerController : MonoBehaviour
     float maxHealth = 100f;
     private void Awake()
     {
+        if (PlayerPrefs.GetInt("weaponDamage") == 0)
+        {
+            PlayerPrefs.SetInt("weaponDamage", 15);
+        }
         playerControls = new PlayerInputActions();
         rb = GetComponent<Rigidbody2D>();
         main = Camera.main;
         bc = GetComponent<BoxCollider2D>();
         Time.timeScale = 1;
+        weapon = transform.GetChild(0).transform.GetChild(PlayerPrefs.GetInt("activeWeapon")).gameObject;
+        weaponDamage = PlayerPrefs.GetInt("weaponDamage");
     }
 
 
@@ -107,13 +113,43 @@ public class PlayerController : MonoBehaviour
             PlayerDeath();
         }
 
-        
+        if (Input.GetKeyDown("f"))
+            Debug.Log("f key pressed");
     }
 
     void FixedUpdate()
     {
         if (!isDodging)
             rb.velocity = new Vector2(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed);
+    }
+
+
+    //For Picking up weapons in the hub
+     void OnTriggerStay2D(Collider2D col)
+    {
+        if (col.CompareTag("Axe") && Input.GetKeyDown("f"))
+        {
+            Destroy(col.gameObject);
+            weapon = transform.GetChild(0).GetChild(1).gameObject;
+            PlayerPrefs.SetInt("activeWeapon", 1);
+            PlayerPrefs.SetInt("weaponDamage", 20);
+        }
+
+        if (col.CompareTag("Spear") && Input.GetKeyDown("f"))
+        {
+            Destroy(col.gameObject);
+            weapon = transform.GetChild(0).GetChild(2).gameObject;
+            PlayerPrefs.SetInt("activeWeapon", 2);
+            PlayerPrefs.SetInt("weaponDamage", 10);
+        }
+
+        if (col.CompareTag("Sword") && Input.GetKeyDown("f"))
+        {
+            Destroy(col.gameObject);
+            weapon = transform.GetChild(0).GetChild(0).gameObject;
+            PlayerPrefs.SetInt("activeWeapon", 0);
+            PlayerPrefs.SetInt("weaponDamage", 15);
+        }
     }
 
     void PlayerDeath()

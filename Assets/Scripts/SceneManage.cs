@@ -61,7 +61,8 @@ public class SceneManage : MonoBehaviour
 
     public void ResetPrefs()
     {
-        PlayerPrefs.SetInt("winCount", 1);
+        //PlayerPrefs.SetInt("winCount", 1);
+        PlayerPrefs.DeleteAll();
         SceneManager.LoadScene("MainMenu");
     }
 
