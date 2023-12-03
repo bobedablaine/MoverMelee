@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] RectTransform healthbarForeGround;
     float healthbarMaxWidth = 247.58f;
     float maxHealth = 100f;
+    Vector3 pointerPosition;
     private void Awake()
     {
         if (PlayerPrefs.GetInt("weaponDamage") == 0)
@@ -44,6 +45,7 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = 1;
         weapon = transform.GetChild(0).transform.GetChild(PlayerPrefs.GetInt("activeWeapon")).gameObject;
         weaponDamage = PlayerPrefs.GetInt("weaponDamage");
+        
     }
 
 
@@ -83,11 +85,19 @@ public class PlayerController : MonoBehaviour
         if (isSwinging)
         {
             weaponTimer += Time.deltaTime;
+            if (PlayerPrefs.GetInt("activeWeapon") == 2)
+            {
+                pointerPosition = main.ScreenToWorldPoint(Input.mousePosition);
+                Vector3 temp = pointerPosition - weapon.transform.position;
+                Debug.Log(temp);
+            }
+
             if (weaponTimer > weaponDuration)
             {
                 isSwinging = false;
                 weaponTimer = 0;
                 weapon.SetActive(false);
+                weapon.transform.position = Vector3.zero;
             }
         }
 
@@ -164,6 +174,10 @@ public class PlayerController : MonoBehaviour
         {
             isSwinging = true;
             weapon.SetActive(true);
+            if (PlayerPrefs.GetInt("activeWeapon") == 2)
+            {
+                weapon.transform.position -= new Vector3(2, 0, 0);
+            }
         }
     }
 
