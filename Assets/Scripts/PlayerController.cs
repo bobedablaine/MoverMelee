@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] RectTransform healthbarForeGround;
     float healthbarMaxWidth = 247.58f;
     float maxHealth = 100f;
-    Vector3 pointerPosition;
+    [SerializeField] AudioSource[] weaponSounds;
     private void Awake()
     {
         if (PlayerPrefs.GetInt("weaponDamage") == 0)
@@ -85,19 +85,12 @@ public class PlayerController : MonoBehaviour
         if (isSwinging)
         {
             weaponTimer += Time.deltaTime;
-            if (PlayerPrefs.GetInt("activeWeapon") == 2)
-            {
-                pointerPosition = main.ScreenToWorldPoint(Input.mousePosition);
-                Vector3 temp = pointerPosition - weapon.transform.position;
-                Debug.Log(temp);
-            }
 
             if (weaponTimer > weaponDuration)
             {
                 isSwinging = false;
                 weaponTimer = 0;
                 weapon.SetActive(false);
-                weapon.transform.position = Vector3.zero;
             }
         }
 
@@ -123,8 +116,8 @@ public class PlayerController : MonoBehaviour
             PlayerDeath();
         }
 
-        if (Input.GetKeyDown("f"))
-            Debug.Log("f key pressed");
+        // if (Input.GetKeyDown("f"))
+        //     Debug.Log("f key pressed");
     }
 
     void FixedUpdate()
@@ -137,12 +130,13 @@ public class PlayerController : MonoBehaviour
     //For Picking up weapons in the hub
      void OnTriggerStay2D(Collider2D col)
     {
+        //Debug.Log("Staying in");
         if (col.CompareTag("Axe") && Input.GetKeyDown("f"))
         {
             Destroy(col.gameObject);
             weapon = transform.GetChild(0).GetChild(1).gameObject;
             PlayerPrefs.SetInt("activeWeapon", 1);
-            PlayerPrefs.SetInt("weaponDamage", 20);
+            PlayerPrefs.SetInt("weaponDamage", 15);
         }
 
         if (col.CompareTag("Spear") && Input.GetKeyDown("f"))
@@ -150,7 +144,7 @@ public class PlayerController : MonoBehaviour
             Destroy(col.gameObject);
             weapon = transform.GetChild(0).GetChild(2).gameObject;
             PlayerPrefs.SetInt("activeWeapon", 2);
-            PlayerPrefs.SetInt("weaponDamage", 10);
+            PlayerPrefs.SetInt("weaponDamage", 8);
         }
 
         if (col.CompareTag("Sword") && Input.GetKeyDown("f"))
@@ -158,7 +152,7 @@ public class PlayerController : MonoBehaviour
             Destroy(col.gameObject);
             weapon = transform.GetChild(0).GetChild(0).gameObject;
             PlayerPrefs.SetInt("activeWeapon", 0);
-            PlayerPrefs.SetInt("weaponDamage", 15);
+            PlayerPrefs.SetInt("weaponDamage", 20);
         }
     }
 
@@ -174,10 +168,7 @@ public class PlayerController : MonoBehaviour
         {
             isSwinging = true;
             weapon.SetActive(true);
-            if (PlayerPrefs.GetInt("activeWeapon") == 2)
-            {
-                weapon.transform.position -= new Vector3(2, 0, 0);
-            }
+            weaponSounds[PlayerPrefs.GetInt("activeWeapon")].Play();
         }
     }
 
