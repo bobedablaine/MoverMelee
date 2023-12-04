@@ -26,11 +26,11 @@ public class WeaponParent : MonoBehaviour
         {
             if (PlayerPrefs.GetInt("activeWeapon") == 1)
             {
-                transform.Rotate(0, 0, rotationSpeed);
+                transform.Rotate(0, 0, rotationSpeed*1000*Time.deltaTime);
             }
             if (PlayerPrefs.GetInt("activeWeapon") == 2)
             {
-                transform.Rotate(3, 0, rotationSpeed-0.75f);
+                transform.Rotate(2500*Time.deltaTime, 0, rotationSpeed*500*Time.deltaTime);
             }
         }
         //transform.rotation = Quaternion.Euler(Vector3.forward * 50);
